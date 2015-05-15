@@ -1,0 +1,17 @@
+{
+  "name": "tmuxy",
+  "version": "0.0.1",
+  "description": "sweet tmux dev environments done fast",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-js": "browserify ./src/scripts/main.js -o ./src/scripts/bundle.js",
+    "watch-js": "watchify ./src/scripts/main.js -o ./src/scripts/bundle.js"
+  },
+  "author": "Harry Hedger",
+  "license": "MIT",
+  "devDependencies": {
+    "browser-sync": "^2.6.4",
+    "browserify": "^9.0.8",
+    "watchify": "^3.1.2"
+  }
+}
