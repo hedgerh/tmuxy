@@ -3,7 +3,8 @@ var splitManager = require('./u-SplitManager'),
     Helpers      = require('./u-Helpers'),
     createNewTab = Helpers.createNewTab,
     handleSelect = Helpers.handleSelect,
-    getPaneIds   = Helpers.getPaneIds;
+    getPaneIds   = Helpers.getPaneIds,
+    getPanes     = Helpers.getPanes;
 
 /**
  * tmux configuration editor.
@@ -31,6 +32,10 @@ $(document).ready(function() {
   $('.SplitVerticalButton').on('click', function(e) {
     _handleSplit(e, 'vertical');
   });
+
+  $('.DeletePaneButton').on('click', function(e) {
+    _deletePane(e);
+  })
 
   $('.GetScriptButton').on('click', function(e) {
     var size;
@@ -85,6 +90,76 @@ $(document).ready(function() {
 
     getPaneIds('.Layout');
   }
+
+  function _deletePane(e) {
+    var $target = $('.ui-selected');
+    var $targets = $('.ui-selected').siblings('div:not(.ui-resizable-handle, .backgroundNumber)');
+    var $parent = $target.parent();
+
+    var heightRatio = $targets.children('.LeftPane, .TopPane').height() / ($targets.children('.LeftPane, .TopPane').height() + $targets.children('.RightPane, .BottomPane').height());
+    var widthRatio = $targets.children('.LeftPane, .TopPane').width() / ($targets.children('.LeftPane, .TopPane').width() + $targets.children('.RightPane, .BottomPane').width());
+
+    $parent.append($targets.children());
+    var temp = [];
+    var id = -1;
+    var daindex = -1;
+
+    stack.forEach(function(item, i) {
+        if (item.element[0] !== $target[0] && item.element[0] !== $targets[0]) {
+            temp.push(item);
+        } else {
+            id = item.target;
+            daindex = i;
+        }
+    });
+
+    stack = temp;
+
+    if (id !== -1) {
+        stack = stack.map(function(item, i) {
+            if (item.target > id && i >= index) {
+                item.target--;
+            }
+
+            return item;
+        });
+    }
+    $target.remove();
+    $targets.remove();
+
+    if ($parent.children('.LeftPane, .RightPane').length !== 0) {
+        $parent.css({
+            'flex-direction': 'row'
+        });
+
+        $parent.children('.LeftPane').css({
+            height: $parent.height(),
+            width: $parent.width() * widthRatio
+        })
+
+        $parent.children('.RightPane').css({
+            height: $parent.height(),
+            width: $parent.width() * (1 - widthRatio)
+        })
+
+    } else {
+        $parent.css({
+            'flex-direction': 'column'
+        });
+
+        $parent.children('.TopPane').css({
+            height: $parent.height() * heightRatio,
+            width: $parent.width()
+        });
+
+        $parent.children('.BottomPane').css({
+            height: $parent.height() * (1 - heightRatio),
+            width: $parent.width()
+        })
+    }
+
+    getPaneIds('.Layout');
+  }
 });
 
 },{"./u-Helpers":2,"./u-SplitManager":3}],2:[function(require,module,exports){
@@ -104,6 +179,16 @@ module.exports = {
     $('.Layout').on('click', handleSelect);
 
     $("div#tabs").tabs("refresh");
+  },
+
+  getPanes: function getPanes(parent) {
+    var paneId = 0;
+    var $tree = $(parent);
+    traverse($tree);
+    function traverse(tree) {
+        console.log($(tree).children('.LeftNode, .TopNode'), 'traverseLeft');
+        console.log($(tree).children('.RightNode, .BottomNode'), 'traverseRight');
+    }
   },
 
   getPaneIds: function getPaneIds(parent) {

@@ -16,6 +16,16 @@ module.exports = {
     $("div#tabs").tabs("refresh");
   },
 
+  getPanes: function getPanes(parent) {
+    var paneId = 0;
+    var $tree = $(parent);
+    traverse($tree);
+    function traverse(tree) {
+        console.log($(tree).children('.LeftNode, .TopNode'), 'traverseLeft');
+        console.log($(tree).children('.RightNode, .BottomNode'), 'traverseRight');
+    }
+  },
+
   getPaneIds: function getPaneIds(parent) {
     var $panes = $('[data-pane-id]');
     $panes.removeAttr('data-pane-id');
