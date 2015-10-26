@@ -1,6 +1,6 @@
-# tmuxy
+# tmuxy :octopus:
 
-Had an idea for this on the train ride home and thought it'd be fun to try and build.  Sometimes the panes are a little buggy, but I've generated some 25 split layouts with it. :octopus:
+Had an idea for this on the train ride home and thought it'd be fun to try and build.  Sometimes the panes are a little buggy, but I've generated some 25 split layouts with it.
 
 ##Instructions
 - [Go to the web app](http://hedgerh.github.io/tmuxy)
